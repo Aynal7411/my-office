@@ -22,6 +22,19 @@ app.get('/', (req, res) => {
   res.send({ message: 'Portfolio API is running' });
 });
 
+const startServer = (port) => {
+  const server = app.listen(port, () => console.log(`✓ Server listening on port ${port}`));
+
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`✗ Port ${port} is already in use. Stop the process using it or set a different PORT in server/.env.`);
+    } else {
+      console.error('✗ Server error:', error.message);
+    }
+    process.exit(1);
+  });
+};
+
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -32,7 +45,7 @@ mongoose
   })
   .then(() => {
     console.log('✓ MongoDB connected successfully');
-    app.listen(PORT, () => console.log(`✓ Server listening on port ${PORT}`));
+    startServer(PORT);
   })
   .catch((error) => {
     console.error('✗ MongoDB connection failed:', error.message);
