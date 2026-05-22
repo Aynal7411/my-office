@@ -68,7 +68,7 @@ function Hero() {
             >
               <img
                 src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=6f9f0aca0a5a3b5b6f8c2f1b1f6c"
-                alt="Aynal profile"
+                alt="Aynal Haque"
                 className="h-56 w-56 rounded-full object-cover shadow-lg"
               />
               <div className="absolute -right-6 -bottom-6 rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-slate-900 shadow-md">MERN</div>
