@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { API_BASE } from '../api';
 
 const ADMIN_PASSWORD = 'admin123';
 
@@ -32,7 +33,7 @@ function Admin() {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/projects`, {
+      const response = await axios.get(`${API_BASE}/admin/projects`, {
         headers: { 'x-admin-password': ADMIN_PASSWORD },
       });
       setProjects(response.data);
@@ -72,12 +73,12 @@ function Admin() {
       };
 
       if (editingProjectId) {
-        await axios.put(`${import.meta.env.VITE_API_URL}/admin/projects/${editingProjectId}`, projectPayload, {
+        await axios.put(`${API_BASE}/admin/projects/${editingProjectId}`, projectPayload, {
           headers: { 'x-admin-password': ADMIN_PASSWORD },
         });
         setFeedback('Project updated successfully.');
       } else {
-        await axios.post(`${import.meta.env.VITE_API_URL}/admin/projects`, projectPayload, {
+        await axios.post(`${API_BASE}/admin/projects`, projectPayload, {
           headers: { 'x-admin-password': ADMIN_PASSWORD },
         });
         setFeedback('Project added successfully.');
@@ -109,7 +110,7 @@ function Admin() {
     }
 
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/admin/projects/${projectId}`, {
+      await axios.delete(`${API_BASE}/admin/projects/${projectId}`, {
         headers: { 'x-admin-password': ADMIN_PASSWORD },
       });
       setFeedback('Project removed successfully.');

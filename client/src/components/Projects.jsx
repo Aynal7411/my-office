@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import ProjectCard from './ProjectCard';
+import { API_BASE } from '../api';
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -12,7 +13,7 @@ function Projects() {
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/projects`);
+        const response = await axios.get(`${API_BASE}/projects`);
         setProjects(response.data);
       } catch (err) {
         setError('Unable to load projects. Please try again later.');

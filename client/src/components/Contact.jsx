@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../api';
 
 function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -16,7 +17,7 @@ function Contact() {
     setLoading(true);
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, formData);
+      await axios.post(`${API_BASE}/messages`, formData);
       setStatus('Message sent successfully! I will respond soon.');
       setFormData({ name: '', email: '', message: '' });
     } catch (error) {
