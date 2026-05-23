@@ -1,14 +1,15 @@
 const express = require('express');
 const Project = require('../models/Project');
+const asyncHandler = require('../middleware/asyncHandler');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  try {
-    const projects = await Project.find().sort({ createdAt: -1 });
-    res.json(projects);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to load projects', error: error.message });
-  }
-});
+router.get('/', asyncHandler(async (req, res) => {
+  const projects = await Project.find()
+    .select('title description imageUrl techStack liveDemoUrl githubUrl createdAt')
+    .sort({ createdAt: -1 })
+    .lean();
+
+  res.json({ success: true, data: projects });
+}));
 
 module.exports = router;

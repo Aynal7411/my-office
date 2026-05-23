@@ -1,36 +1,25 @@
 import { motion } from 'framer-motion';
 import useTyping from '../hooks/useTyping';
-import profileImg from '../assets/profile-3.png';
-
+import profileImg from '../assets/profile-3-optimized.jpg';
 
 function Hero() {
-  const texts = ["Hi, I'm Aynal haque",  'MERN Stack Developer', 'I build scalable full-stack applications.'];
+  const texts = ["Hi, I'm Aynal Haque", 'MERN Stack Developer', 'I build scalable full-stack applications.'];
   const typed = useTyping(texts, 80, 1400);
 
   return (
-    <section id="home" className="relative overflow-hidden pt-24 pb-20">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-sky-50 via-indigo-50 to-violet-50 dark:from-slate-900 dark:via-slate-950 dark:to-slate-950" />
-
-      <div className="absolute inset-0 -z-20 opacity-40 pointer-events-none">
-        <div className="particles">
-          <span className="particle" style={{ left: '5%', top: '20%', width: 8, height: 8 }} />
-          <span className="particle" style={{ left: '20%', top: '10%', width: 10, height: 10 }} />
-          <span className="particle" style={{ left: '40%', top: '30%', width: 6, height: 6 }} />
-          <span className="particle" style={{ left: '70%', top: '15%', width: 12, height: 12 }} />
-          <span className="particle" style={{ left: '85%', top: '40%', width: 9, height: 9 }} />
-        </div>
-      </div>
+    <section id="home" className="relative overflow-hidden py-20 sm:py-24">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,#e0f2fe,transparent_34%),linear-gradient(135deg,#f8fafc,#eef2ff_48%,#f8fafc)] dark:bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.16),transparent_30%),linear-gradient(135deg,#020617,#0f172a_52%,#020617)]" />
 
       <div className="mx-auto max-w-6xl px-6">
-        <div className="grid gap-10 items-center lg:grid-cols-[1fr_0.45fr]">
+        <div className="grid gap-12 lg:grid-cols-[1fr_0.44fr] lg:items-center">
           <div>
-            <p className="mb-4 inline-flex rounded-full bg-sky-100 px-4 py-1 text-sm font-medium text-sky-700 dark:bg-sky-900/20 dark:text-sky-200">
+            <p className="mb-4 inline-flex rounded-full border border-sky-200 bg-white/70 px-4 py-1 text-sm font-medium text-sky-700 shadow-sm dark:border-sky-900/70 dark:bg-slate-900/70 dark:text-sky-200">
               Full-stack developer portfolio
             </p>
 
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-5xl">
+            <h1 className="mt-4 min-h-[7.5rem] text-4xl font-semibold text-slate-950 dark:text-white sm:text-5xl">
               <span className="block">{typed}</span>
-              <span className="block mt-3 text-xl font-medium text-slate-600 dark:text-slate-300">MERN Stack Developer</span>
+              <span className="mt-4 block text-xl font-medium text-slate-600 dark:text-slate-300">React, Node.js, Express, MongoDB</span>
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
@@ -38,42 +27,36 @@ function Hero() {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
-              <a
-                href="#projects"
-                className="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-slate-200"
-              >
+              <a href="#projects" className="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-400 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-slate-200">
                 View projects
               </a>
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-              >
+              <a href="#contact" className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-400 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
                 Contact me
               </a>
-              <a
-                href="/resume.pdf"
-                className="inline-flex items-center justify-center rounded-full border border-transparent bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="/resume.pdf" className="inline-flex items-center justify-center rounded-full border border-transparent bg-sky-600 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-400" target="_blank" rel="noreferrer">
                 Download CV
               </a>
             </div>
           </div>
 
-          <div className="hidden items-center justify-center lg:flex">
+          <div className="flex items-center justify-center">
             <motion.div
               initial={{ y: -4 }}
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
               className="relative"
             >
-             <img
+              <img
                 src={profileImg}
-                alt="Profile"
-                className="w-64 rounded-full border-4 border-slate-300 shadow-lg transition-transform hover:scale-105"
+                alt="Aynal Haque"
+                width="320"
+                height="320"
+                fetchPriority="high"
+                className="h-64 w-64 rounded-full border-4 border-white object-cover shadow-soft dark:border-slate-800 sm:h-80 sm:w-80"
               />
-              <div className="absolute -right-6 -bottom-6 rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-slate-900 shadow-md">MERN</div>
+              <div className="absolute -bottom-4 -right-4 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-md dark:border-slate-700 dark:bg-slate-900 dark:text-white">
+                MERN
+              </div>
             </motion.div>
           </div>
         </div>

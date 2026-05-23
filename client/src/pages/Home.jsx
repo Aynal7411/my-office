@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
-import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import Skills from '../components/Skills';
@@ -9,6 +8,7 @@ import Projects from '../components/Projects';
 import About from '../components/About';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
+import Seo from '../components/Seo';
 
 function Home() {
   const location = useLocation();
@@ -32,12 +32,7 @@ function Home() {
 
   return (
     <motion.main initial="initial" animate="animate" exit="exit" variants={pageVariants}>
-      <Helmet>
-        <title>Developer Portfolio — Home</title>
-        <meta name="description" content="Full-stack developer portfolio showcasing projects, skills, and contact information." />
-        <meta property="og:title" content="Developer Portfolio" />
-        <meta property="og:description" content="Full-stack developer portfolio showcasing projects, skills, and contact information." />
-      </Helmet>
+      <Seo />
       <Hero />
       <Skills />
       <Projects />

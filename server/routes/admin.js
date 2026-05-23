@@ -2,87 +2,75 @@ const express = require('express');
 const protectAdmin = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const Project = require('../models/Project');
+const Message = require('../models/Message');
+const asyncHandler = require('../middleware/asyncHandler');
+const { adminLimiter } = require('../middleware/security');
+const AppError = require('../utils/AppError');
+const { validateProjectPayload } = require('../utils/validators');
+
 const router = express.Router();
 
+router.use(adminLimiter);
 router.use(protectAdmin);
 
-router.get('/projects', async (req, res) => {
-  try {
-    const projects = await Project.find().sort({ createdAt: -1 });
-    res.json(projects);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to load admin projects', error: error.message });
+router.get('/projects', asyncHandler(async (req, res) => {
+  const projects = await Project.find().sort({ createdAt: -1 }).lean();
+  res.json({ success: true, data: projects });
+}));
+
+router.post('/projects', upload.single('image'), asyncHandler(async (req, res) => {
+  const payload = validateProjectPayload(req.body, req.file);
+  const project = await Project.create(payload);
+  res.status(201).json({ success: true, data: project });
+}));
+
+router.put('/projects/:id', upload.single('image'), asyncHandler(async (req, res) => {
+  const payload = validateProjectPayload(req.body, req.file, true);
+  const updatedProject = await Project.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updatedProject) {
+    throw new AppError('Project not found', 404);
   }
-});
 
-router.post('/projects', upload.single('image'), async (req, res) => {
-  const { title, description, techStack, liveDemoUrl, githubUrl } = req.body;
-  let imageUrl = req.body.imageUrl;
+  res.json({ success: true, data: updatedProject });
+}));
 
-  if (req.file) {
-    imageUrl = `/uploads/${req.file.filename}`;
+router.delete('/projects/:id', asyncHandler(async (req, res) => {
+  const deletedProject = await Project.findByIdAndDelete(req.params.id);
+
+  if (!deletedProject) {
+    throw new AppError('Project not found', 404);
   }
 
-  if (!title || !description || !imageUrl) {
-    return res.status(400).json({ message: 'Title, description, and image are required' });
+  res.json({ success: true, message: 'Project deleted successfully' });
+}));
+
+router.get('/messages', asyncHandler(async (req, res) => {
+  const messages = await Message.find().sort({ createdAt: -1 }).limit(100).lean();
+  res.json({ success: true, data: messages });
+}));
+
+router.patch('/messages/:id/status', asyncHandler(async (req, res) => {
+  const allowedStatuses = ['new', 'read', 'archived'];
+
+  if (!allowedStatuses.includes(req.body.status)) {
+    throw new AppError('Invalid message status', 400);
   }
 
-  try {
-    const techStackArray = Array.isArray(techStack) ? techStack : (techStack ? JSON.parse(techStack) : []);
-    const project = new Project({ 
-      title, 
-      description, 
-      imageUrl, 
-      techStack: techStackArray, 
-      liveDemoUrl, 
-      githubUrl 
-    });
-    const savedProject = await project.save();
-    res.status(201).json(savedProject);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to create project', error: error.message });
+  const message = await Message.findByIdAndUpdate(
+    req.params.id,
+    { status: req.body.status },
+    { new: true, runValidators: true }
+  );
+
+  if (!message) {
+    throw new AppError('Message not found', 404);
   }
-});
 
-router.put('/projects/:id', upload.single('image'), async (req, res) => {
-  try {
-    const updateData = { ...req.body };
-    
-    if (req.file) {
-      updateData.imageUrl = `/uploads/${req.file.filename}`;
-    }
-
-    if (updateData.techStack && typeof updateData.techStack === 'string') {
-      updateData.techStack = JSON.parse(updateData.techStack);
-    }
-
-    const updatedProject = await Project.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!updatedProject) {
-      return res.status(404).json({ message: 'Project not found' });
-    }
-
-    res.json(updatedProject);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to update project', error: error.message });
-  }
-});
-
-router.delete('/projects/:id', async (req, res) => {
-  try {
-    const deletedProject = await Project.findByIdAndDelete(req.params.id);
-
-    if (!deletedProject) {
-      return res.status(404).json({ message: 'Project not found' });
-    }
-
-    res.json({ message: 'Project deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to delete project', error: error.message });
-  }
-});
+  res.json({ success: true, data: message });
+}));
 
 module.exports = router;
