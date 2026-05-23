@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const projectsRoute = require('./routes/projects');
-const messagesRoute = require('./routes/messages');
+//const messagesRoute = require('./routes/messages');
 const adminRoute = require('./routes/admin');
+const contactRoutes = require('./routes/contactRoutes');
 
 dotenv.config();
 
@@ -15,8 +16,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/projects', projectsRoute);
-app.use('/api/messages', messagesRoute);
+//app.use('/api/messages', messagesRoute);
 app.use('/api/admin', adminRoute);
+app.use('/api/contact', contactRoutes);
 
 app.get('/', (req, res) => {
   res.send({ message: 'Portfolio API is running' });
