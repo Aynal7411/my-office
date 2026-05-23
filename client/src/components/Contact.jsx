@@ -17,7 +17,7 @@ function Contact() {
     setLoading(true);
 
     try {
-      await axios.post(`${API_BASE}/messages`, formData);
+      await axios.post(`${API_BASE}/contact`, formData);
       setStatus('Message sent successfully! I will respond soon.');
       setFormData({ name: '', email: '', message: '' });
     } catch (error) {
