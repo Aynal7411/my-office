@@ -1,5 +1,6 @@
 const express = require('express');
 const protectAdmin = require('../middleware/auth');
+const upload = require('../middleware/upload');
 const Project = require('../models/Project');
 const router = express.Router();
 
@@ -14,15 +15,28 @@ router.get('/projects', async (req, res) => {
   }
 });
 
-router.post('/projects', async (req, res) => {
-  const { title, description, imageUrl, techStack, liveDemoUrl, githubUrl } = req.body;
+router.post('/projects', upload.single('image'), async (req, res) => {
+  const { title, description, techStack, liveDemoUrl, githubUrl } = req.body;
+  let imageUrl = req.body.imageUrl;
+
+  if (req.file) {
+    imageUrl = `/uploads/${req.file.filename}`;
+  }
 
   if (!title || !description || !imageUrl) {
-    return res.status(400).json({ message: 'Title, description, and image URL are required' });
+    return res.status(400).json({ message: 'Title, description, and image are required' });
   }
 
   try {
-    const project = new Project({ title, description, imageUrl, techStack, liveDemoUrl, githubUrl });
+    const techStackArray = Array.isArray(techStack) ? techStack : (techStack ? JSON.parse(techStack) : []);
+    const project = new Project({ 
+      title, 
+      description, 
+      imageUrl, 
+      techStack: techStackArray, 
+      liveDemoUrl, 
+      githubUrl 
+    });
     const savedProject = await project.save();
     res.status(201).json(savedProject);
   } catch (error) {
@@ -30,9 +44,19 @@ router.post('/projects', async (req, res) => {
   }
 });
 
-router.put('/projects/:id', async (req, res) => {
+router.put('/projects/:id', upload.single('image'), async (req, res) => {
   try {
-    const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, {
+    const updateData = { ...req.body };
+    
+    if (req.file) {
+      updateData.imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    if (updateData.techStack && typeof updateData.techStack === 'string') {
+      updateData.techStack = JSON.parse(updateData.techStack);
+    }
+
+    const updatedProject = await Project.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true,
     });
