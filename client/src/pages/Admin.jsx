@@ -16,6 +16,7 @@ function Admin() {
     title: '',
     description: '',
     imageUrl: '',
+    imageFile: null,
     techStack: '',
     liveDemoUrl: '',
     githubUrl: '',
@@ -55,11 +56,16 @@ function Admin() {
   };
 
   const handleChange = (event) => {
-    setFormState({ ...formState, [event.target.name]: event.target.value });
+    const { name, value, type, files } = event.target;
+    if (type === 'file') {
+      setFormState({ ...formState, imageFile: files?.[0] || null });
+    } else {
+      setFormState({ ...formState, [name]: value });
+    }
   };
 
   const resetForm = () => {
-    setFormState({ title: '', description: '', imageUrl: '', techStack: '', liveDemoUrl: '', githubUrl: '' });
+    setFormState({ title: '', description: '', imageUrl: '', imageFile: null, techStack: '', liveDemoUrl: '', githubUrl: '' });
     setEditingProjectId(null);
   };
 
@@ -67,19 +73,26 @@ function Admin() {
     event.preventDefault();
     setFeedback('');
     try {
-      const projectPayload = {
-        ...formState,
-        techStack: formState.techStack.split(',').map((item) => item.trim()).filter(Boolean),
-      };
+      const formData = new FormData();
+      formData.append('title', formState.title);
+      formData.append('description', formState.description);
+      if (formState.imageFile) {
+        formData.append('image', formState.imageFile);
+      } else if (formState.imageUrl) {
+        formData.append('imageUrl', formState.imageUrl);
+      }
+      formData.append('techStack', JSON.stringify(formState.techStack.split(',').map((item) => item.trim()).filter(Boolean)));
+      formData.append('liveDemoUrl', formState.liveDemoUrl);
+      formData.append('githubUrl', formState.githubUrl);
 
       if (editingProjectId) {
-        await axios.put(`${API_BASE}/admin/projects/${editingProjectId}`, projectPayload, {
-          headers: { 'x-admin-password': ADMIN_PASSWORD },
+        await axios.put(`${API_BASE}/admin/projects/${editingProjectId}`, formData, {
+          headers: { 'x-admin-password': ADMIN_PASSWORD, 'Content-Type': 'multipart/form-data' },
         });
         setFeedback('Project updated successfully.');
       } else {
-        await axios.post(`${API_BASE}/admin/projects`, projectPayload, {
-          headers: { 'x-admin-password': ADMIN_PASSWORD },
+        await axios.post(`${API_BASE}/admin/projects`, formData, {
+          headers: { 'x-admin-password': ADMIN_PASSWORD, 'Content-Type': 'multipart/form-data' },
         });
         setFeedback('Project added successfully.');
       }
@@ -97,6 +110,7 @@ function Admin() {
       title: project.title,
       description: project.description,
       imageUrl: project.imageUrl,
+      imageFile: null,
       techStack: project.techStack.join(', '),
       liveDemoUrl: project.liveDemoUrl || '',
       githubUrl: project.githubUrl || '',
@@ -197,13 +211,25 @@ function Admin() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">Image URL</label>
+                  <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">Project image</label>
+                  <input
+                    type="file"
+                    name="imageFile"
+                    onChange={handleChange}
+                    accept="image/*"
+                    className="w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                  />
+                  {formState.imageFile && <p className="mt-2 text-sm text-sky-600 dark:text-sky-400">File selected: {formState.imageFile.name}</p>}
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Or paste image URL below if uploading a file</p>
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">Image URL (fallback)</label>
                   <input
                     name="imageUrl"
                     value={formState.imageUrl}
                     onChange={handleChange}
+                    placeholder="https://example.com/image.jpg"
                     className="w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-                    required
                   />
                 </div>
                 <div>
