@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import useTyping from '../hooks/useTyping';
+import profileImg from '../assets/profile-3.png';
+
 
 function Hero() {
   const texts = ["Hi, I'm Aynal haque",  'MERN Stack Developer', 'I build scalable full-stack applications.'];
@@ -66,10 +68,10 @@ function Hero() {
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
               className="relative"
             >
-              <img
-                src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=6f9f0aca0a5a3b5b6f8c2f1b1f6c"
-                alt="Aynal Haque"
-                className="h-56 w-56 rounded-full object-cover shadow-lg"
+             <img
+                src={profileImg}
+                alt="Profile"
+                className="w-64 rounded-full border-4 border-slate-300 shadow-lg transition-transform hover:scale-105"
               />
               <div className="absolute -right-6 -bottom-6 rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-slate-900 shadow-md">MERN</div>
             </motion.div>
