@@ -39,7 +39,7 @@ function Contact() {
             </p>
             <div className="mt-10 rounded-3xl border border-slate-200/80 bg-white/80 p-8 shadow-soft dark:border-slate-800 dark:bg-slate-900/90">
               <p className="text-slate-700 dark:text-slate-200">Prefer email?</p>
-              <p className="mt-3 text-lg font-semibold text-slate-950 dark:text-white">hello@example.com</p>
+              <p className="mt-3 text-lg font-semibold text-slate-950 dark:text-white">aynalhaque7411@gmail.com</p>
             </div>
           </div>
           <form
